@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "tree -L 3 -a -I '.git|.obsidian' --noreport"
+          },
+          {
+            "type": "command",
+            "command": "echo ''; echo \"📥 Inbox: $(find 00-inbox -name '*.md' 2>/dev/null | wc -l | tr -d ' ') items\"; echo \"📝 Recent changes:\"; git log --oneline --name-only -5 2>/dev/null | head -20 || echo '  (no commits yet)'"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if echo \"$TOOL_INPUT\" | grep -q '\"file_path\".*\\(04-published\\|05-archive\\)'; then echo 'WARN: Writing to a protected folder (04-published or 05-archive). Confirm with user before proceeding.'; fi"
+          }
+        ]
+      }
+    ]
+  }
+}
